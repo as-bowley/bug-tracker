@@ -1,35 +1,39 @@
-import "../../styles/components/UserRegistration.css";
-
-import * as React from "react";
+import { useState } from "react";
 import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { Alert, FormControl, InputLabel, MenuItem, Select, Snackbar } from "@mui/material";
+import {
+	Alert,
+	FormControl,
+	InputLabel,
+	MenuItem,
+	Select,
+	Snackbar,
+} from "@mui/material";
 
 export default function UserRegistration() {
-	const [formData, setFormData] = React.useState({
+	const [formData, setFormData] = useState({
 		username: "",
 		displayname: "",
 		team: "",
 		password: "",
 	});
 
-	const [notification, setNotification] = React.useState({
+	const [notification, setNotification] = useState({
 		open: false,
 		message: "",
 		severity: "success",
 	});
 
-	const handleCloseNotification = () => { 
+	const handleCloseNotification = () => {
 		setNotification({ ...notification, open: false });
-	}
+	};
 
-	const [isRegisterMode, setIsRegisterMode] = React.useState(true);
+	const [isRegisterMode, setIsRegisterMode] = useState(true);
 
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setFormData({ ...formData, [event.target.name]: event.target.value });
@@ -64,7 +68,6 @@ export default function UserRegistration() {
 					});
 				}
 
-				// Reset form data
 				setFormData({
 					username: "",
 					displayname: "",
@@ -101,124 +104,117 @@ export default function UserRegistration() {
 	};
 
 	return (
-		<div className="user-registration-form">
-			<Container component="main" maxWidth="xs">
-				<CssBaseline />
+		<Container component="main" maxWidth="xs">
+			<Box
+				sx={{
+					marginTop: 8,
+					display: "flex",
+					flexDirection: "column",
+					alignItems: "center",
+					justifyContent: "center",
+				}}
+			>
+				<Typography component="h1" variant="h5">
+					{isRegisterMode ? "User Registration" : "User Login"}
+				</Typography>
 				<Box
-					sx={{
-						marginTop: 8,
-						display: "flex",
-						flexDirection: "column",
-						alignItems: "center",
-						justifyContent: "center",
-					}}
+					component="form"
+					noValidate
+					onSubmit={handleSubmit}
+					sx={{ mt: 3 }}
 				>
-					<Typography component="h1" variant="h5">
-						{isRegisterMode ? "User Registration" : "User Login"}
-					</Typography>
-					<Box
-						component="form"
-						noValidate
-						onSubmit={handleSubmit}
-						sx={{ mt: 3 }}
-					>
-						<Grid container spacing={2}>
-							<Grid item xs={12} sm={isRegisterMode ? 6 : 12}>
-								<TextField
-									name="username"
-									required
-									fullWidth
-									id="username"
-									label="Username"
-									autoFocus
-									value={formData.username}
-									onChange={handleChange}
-								/>
-							</Grid>
-							<Grid item xs={12} sm={6}>
-								{isRegisterMode && (
-									<TextField
-										name="displayname"
-										required
-										fullWidth
-										id="displayname"
-										label="Display Name"
-										value={formData.displayname}
-										onChange={handleChange}
-									/>
-								)}
-							</Grid>
-							<Grid item xs={12}>
-								{isRegisterMode && (
-									<FormControl
-										required
-										fullWidth
-										variant="outlined"
-									>
-										<InputLabel id="team-label">
-											Team
-										</InputLabel>
-										<Select
-											name="team"
-											required
-											fullWidth
-											labelId="team-label"
-											id="team"
-											label="Team"
-											value={formData.team}
-											onChange={handleChange}
-										>
-											<MenuItem value="revenue">
-												Revenue
-											</MenuItem>
-											<MenuItem value="engineering">
-												Engineering
-											</MenuItem>
-										</Select>
-									</FormControl>
-								)}
-								<TextField
-									required
-									fullWidth
-									name="password"
-									label="Password"
-									type="password"
-									id="password"
-									autoComplete="new-password"
-									value={formData.password}
-									onChange={handleChange}
-									sx={{ mt: isRegisterMode ? 3 : 0 }}
-								/>
-							</Grid>
+					<Grid container spacing={2}>
+						<Grid item xs={12} sm={isRegisterMode ? 6 : 12}>
+							<TextField
+								name="username"
+								required
+								fullWidth
+								id="username"
+								label="Username"
+								autoFocus
+								value={formData.username}
+								onChange={handleChange}
+							/>
 						</Grid>
-						<Button
-							type="submit"
-							fullWidth
-							variant="contained"
-							sx={{ mt: 3, mb: 2 }}
-						>
-							{isRegisterMode ? "Sign Up" : "Login"}
-						</Button>
-						<Grid container justifyContent="flex-end">
-							<Grid item>
-								<Link
-									href="#"
-									variant="body2"
-									onClick={toggleMode}
+						<Grid item xs={12} sm={6}>
+							{isRegisterMode && (
+								<TextField
+									name="displayname"
+									required
+									fullWidth
+									id="displayname"
+									label="Display Name"
+									value={formData.displayname}
+									onChange={handleChange}
+								/>
+							)}
+						</Grid>
+						<Grid item xs={12}>
+							{isRegisterMode && (
+								<FormControl
+									required
+									fullWidth
+									variant="outlined"
 								>
-									{isRegisterMode
-										? "Already have an account? Sign in"
-										: "Don't have an account? Sign up"}
-								</Link>
-							</Grid>
+									<InputLabel id="team-label">
+										Team
+									</InputLabel>
+									<Select
+										name="team"
+										required
+										fullWidth
+										labelId="team-label"
+										id="team"
+										label="Team"
+										value={formData.team}
+										onChange={handleChange}
+									>
+										<MenuItem value="revenue">
+											Revenue
+										</MenuItem>
+										<MenuItem value="engineering">
+											Engineering
+										</MenuItem>
+									</Select>
+								</FormControl>
+							)}
+							<TextField
+								required
+								fullWidth
+								name="password"
+								label="Password"
+								type="password"
+								id="password"
+								autoComplete="new-password"
+								value={formData.password}
+								onChange={handleChange}
+								sx={{ mt: isRegisterMode ? 3 : 0 }}
+							/>
 						</Grid>
-					</Box>
+					</Grid>
+					<Button
+						type="submit"
+						fullWidth
+						variant="contained"
+						sx={{ mt: 3, mb: 2 }}
+					>
+						{isRegisterMode ? "Sign Up" : "Login"}
+					</Button>
+					<Grid container justifyContent="flex-end">
+						<Grid item>
+							<Link href="#" variant="body2" onClick={toggleMode}>
+								{isRegisterMode
+									? "Already have an account? Sign in"
+									: "Don't have an account? Sign up"}
+							</Link>
+						</Grid>
+					</Grid>
 				</Box>
-			</Container>
+			</Box>
 			<Snackbar
 				open={notification.open}
 				onClose={handleCloseNotification}
-				anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+				anchorOrigin={{ vertical: "top", horizontal: "center" }}
 			>
 				<Alert
 					severity={notification.severity}
@@ -227,6 +223,6 @@ export default function UserRegistration() {
 					{notification.message}
 				</Alert>
 			</Snackbar>
-		</div>
+		</Container>
 	);
 }
