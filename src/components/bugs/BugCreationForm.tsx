@@ -10,13 +10,19 @@ import {
 	FormControl,
 	Snackbar,
 	Alert,
+	Select,
+	MenuItem,
+	InputLabel,
 } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { createBug } from "../../redux/actions/bugActions";
 
 const BugCreationForm = () => {
 	const [bugData, setBugData] = useState({
 		title: "",
 		description: "",
 		priority: "low",
+		product: "",
 	});
 
 	const [notification, setNotification] = useState({
@@ -25,33 +31,52 @@ const BugCreationForm = () => {
 		severity: "success",
 	});
 
+	const dispatch = useDispatch();
+
+	const id = useSelector((state) => state.auth.id);
+
 	const handleCloseNotification = () => {
 		setNotification({ ...notification, open: false });
 	};
 
-	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setBugData({ ...bugData, [e.target.name]: e.target.value });
+	const handleChange = (
+		event: React.ChangeEvent<{ name: string; value: unknown }>
+	) => {
+		setBugData({
+			...bugData,
+			[event.target.name]: event.target.value as string,
+		});
 	};
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
+		const bugDataWithUser = { ...bugData, createdBy: id };
 		try {
 			const url = "http://localhost:3000/bugs/create";
 			const response = await fetch(url, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
+					Authorization: `Bearer ${
+						localStorage.getItem("token") || ""
+					}`,
 				},
-				body: JSON.stringify(bugData),
+				body: JSON.stringify(bugDataWithUser),
 			});
 
 			if (response.ok) {
+				dispatch(createBug(bugData));
 				setNotification({
 					open: true,
 					message: "Bug created successfully!",
 					severity: "success",
 				});
-				setBugData({ title: "", description: "", priority: "low" });
+				setBugData({
+					title: "",
+					description: "",
+					priority: "low",
+					product: "",
+				});
 			}
 		} catch (error) {
 			console.error(error);
@@ -119,6 +144,22 @@ const BugCreationForm = () => {
 							label="Critical"
 						/>
 					</RadioGroup>
+				</FormControl>
+				<FormControl fullWidth sx={{ mt: 3 }}>
+					<InputLabel id="product-label">Product</InputLabel>
+					<Select
+						required
+						labelId="product-label"
+						name="product"
+						id="product"
+						value={bugData.product}
+						label="Product"
+						onChange={handleChange}
+					>
+						<MenuItem value="ios">iOS</MenuItem>
+						<MenuItem value="android">Android</MenuItem>
+						<MenuItem value="web">Web</MenuItem>
+					</Select>
 				</FormControl>
 				<Button
 					type="submit"

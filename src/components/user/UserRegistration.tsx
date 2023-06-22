@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState, ChangeEvent, FormEvent } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { loginSuccess } from "../../redux/actions/authActions";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Link from "@mui/material/Link";
@@ -15,31 +17,36 @@ import {
 	Snackbar,
 } from "@mui/material";
 
-export default function UserRegistration() {
+type Notification = {
+	open: boolean;
+	message: string;
+	severity: "success" | "error";
+};
+
+export default function Login() {
+	const dispatch = useDispatch();
 	const [formData, setFormData] = useState({
 		username: "",
 		displayname: "",
 		team: "",
 		password: "",
 	});
-
-	const [notification, setNotification] = useState({
+	const [notification, setNotification] = useState<Notification>({
 		open: false,
 		message: "",
 		severity: "success",
 	});
+	const [isRegisterMode, setIsRegisterMode] = useState(true);
 
 	const handleCloseNotification = () => {
 		setNotification({ ...notification, open: false });
 	};
 
-	const [isRegisterMode, setIsRegisterMode] = useState(true);
-
-	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+	const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
 		setFormData({ ...formData, [event.target.name]: event.target.value });
 	};
 
-	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+	const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		try {
 			const url = isRegisterMode
@@ -54,6 +61,11 @@ export default function UserRegistration() {
 			});
 
 			if (response.ok) {
+				const data = await response.json();
+				localStorage.setItem("token", data.token);
+				dispatch(loginSuccess(data.token));
+				dispatch({ type: "SET_USER_ID", payload: data.id });
+
 				if (isRegisterMode) {
 					setNotification({
 						open: true,
