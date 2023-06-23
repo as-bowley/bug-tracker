@@ -33,7 +33,7 @@ const authReducer = (
 				...state,
 				isAuthenticated: false,
 				token: null,
-				id: null, // Reset user id on logout
+				id: null, 
 			};
 		case SET_USER_ID:
 			return { ...state, id: action.payload };

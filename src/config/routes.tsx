@@ -1,18 +1,23 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-// import BugList from "./BugList";
-// import BugDetails from "./BugDetails";
-// import BugCreate from "./BugCreate";
-import Login from "../pages/Login";
-import BugCreation from "../pages/BugCreation";
+import Login from "../pages/LoginPage";
+import BugCreation from "../pages/BugCreatePage";
 import PrivateRoute from "../components/common/PrivateRoute";
-import Test from "../components/auth/Login";
+import Dashboard from "../pages/DashboardPage";
+import Register from "../components/user/Register";
+import BugDetails from "../components/bugs/BugDetails";
 
 const AppRouter = () => {
 
 	return (
 		<Routes>
-			{/* <Route path="/" exact component={BugList} />
-			<Route path="/bugs/:id" component={BugDetails} /> */}
+			<Route
+				path="/dashboard"
+				element={
+					<PrivateRoute>
+						<Dashboard />
+					</PrivateRoute>
+				}
+			/>
 			<Route
 				path="/bugs/create"
 				element={
@@ -22,7 +27,8 @@ const AppRouter = () => {
 				}
 			/>
 			<Route path="/login" element={<Login />} />
-			<Route path="/test" element={<Test />} />
+			<Route path="/register" element={<Register />} />
+			<Route path="/bugs/:id" element={<BugDetails />} />
 		</Routes>
 	);
 };

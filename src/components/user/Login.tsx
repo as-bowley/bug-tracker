@@ -1,6 +1,7 @@
 import { useState, ChangeEvent, FormEvent } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { loginSuccess } from "../../redux/actions/authActions";
+import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Link from "@mui/material/Link";
@@ -8,14 +9,7 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import {
-	Alert,
-	FormControl,
-	InputLabel,
-	MenuItem,
-	Select,
-	Snackbar,
-} from "@mui/material";
+import { Alert, Snackbar } from "@mui/material";
 
 type Notification = {
 	open: boolean;
@@ -27,8 +21,6 @@ export default function Login() {
 	const dispatch = useDispatch();
 	const [formData, setFormData] = useState({
 		username: "",
-		displayname: "",
-		team: "",
 		password: "",
 	});
 	const [notification, setNotification] = useState<Notification>({
@@ -36,7 +28,7 @@ export default function Login() {
 		message: "",
 		severity: "success",
 	});
-	const [isRegisterMode, setIsRegisterMode] = useState(true);
+	const navigate = useNavigate();
 
 	const handleCloseNotification = () => {
 		setNotification({ ...notification, open: false });
@@ -49,9 +41,7 @@ export default function Login() {
 	const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		try {
-			const url = isRegisterMode
-				? "http://localhost:3000/users/register"
-				: "http://localhost:3000/users/login";
+			const url = "http://localhost:3000/users/login";
 			const response = await fetch(url, {
 				method: "POST",
 				headers: {
@@ -65,54 +55,28 @@ export default function Login() {
 				localStorage.setItem("token", data.token);
 				dispatch(loginSuccess(data.token));
 				dispatch({ type: "SET_USER_ID", payload: data.id });
+				navigate("/dashboard");
 
-				if (isRegisterMode) {
-					setNotification({
-						open: true,
-						message: "User registered successfully",
-						severity: "success",
-					});
-				} else {
-					setNotification({
-						open: true,
-						message: "User logged in successfully",
-						severity: "success",
-					});
-				}
+				setNotification({
+					open: true,
+					message: "User logged in successfully",
+					severity: "success",
+				});
 
 				setFormData({
 					username: "",
-					displayname: "",
-					team: "",
 					password: "",
 				});
 			} else {
-				if (isRegisterMode) {
-					setNotification({
-						open: true,
-						message: "User registration failed",
-						severity: "error",
-					});
-				} else {
-					setNotification({
-						open: true,
-						message: "User login failed",
-						severity: "error",
-					});
-				}
+				setNotification({
+					open: true,
+					message: "User login failed",
+					severity: "error",
+				});
 			}
 		} catch (error) {
-			console.error(
-				`Error occurred during ${
-					isRegisterMode ? "registration" : "login"
-				}`,
-				error
-			);
+			console.error("Error occurred during login", error);
 		}
-	};
-
-	const toggleMode = () => {
-		setIsRegisterMode((prevMode) => !prevMode);
 	};
 
 	return (
@@ -127,7 +91,7 @@ export default function Login() {
 				}}
 			>
 				<Typography component="h1" variant="h5">
-					{isRegisterMode ? "User Registration" : "User Login"}
+					User Login
 				</Typography>
 				<Box
 					component="form"
@@ -136,7 +100,7 @@ export default function Login() {
 					sx={{ mt: 3 }}
 				>
 					<Grid container spacing={2}>
-						<Grid item xs={12} sm={isRegisterMode ? 6 : 12}>
+						<Grid item xs={12}>
 							<TextField
 								name="username"
 								required
@@ -148,48 +112,7 @@ export default function Login() {
 								onChange={handleChange}
 							/>
 						</Grid>
-						<Grid item xs={12} sm={6}>
-							{isRegisterMode && (
-								<TextField
-									name="displayname"
-									required
-									fullWidth
-									id="displayname"
-									label="Display Name"
-									value={formData.displayname}
-									onChange={handleChange}
-								/>
-							)}
-						</Grid>
 						<Grid item xs={12}>
-							{isRegisterMode && (
-								<FormControl
-									required
-									fullWidth
-									variant="outlined"
-								>
-									<InputLabel id="team-label">
-										Team
-									</InputLabel>
-									<Select
-										name="team"
-										required
-										fullWidth
-										labelId="team-label"
-										id="team"
-										label="Team"
-										value={formData.team}
-										onChange={handleChange}
-									>
-										<MenuItem value="revenue">
-											Revenue
-										</MenuItem>
-										<MenuItem value="engineering">
-											Engineering
-										</MenuItem>
-									</Select>
-								</FormControl>
-							)}
 							<TextField
 								required
 								fullWidth
@@ -200,7 +123,6 @@ export default function Login() {
 								autoComplete="new-password"
 								value={formData.password}
 								onChange={handleChange}
-								sx={{ mt: isRegisterMode ? 3 : 0 }}
 							/>
 						</Grid>
 					</Grid>
@@ -210,14 +132,12 @@ export default function Login() {
 						variant="contained"
 						sx={{ mt: 3, mb: 2 }}
 					>
-						{isRegisterMode ? "Sign Up" : "Login"}
+						Login
 					</Button>
 					<Grid container justifyContent="flex-end">
 						<Grid item>
-							<Link href="#" variant="body2" onClick={toggleMode}>
-								{isRegisterMode
-									? "Already have an account? Sign in"
-									: "Don't have an account? Sign up"}
+							<Link href="/register" variant="body2">
+								Don't have an account? Sign up
 							</Link>
 						</Grid>
 					</Grid>

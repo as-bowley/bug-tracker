@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../redux/store"; // adjust this path according to your directory structure
-import { logout } from "../redux/actions/authActions";
+import { RootState } from "../../redux/store";
+import { logout } from "../../redux/actions/authActions";
+
+interface NavLink {
+	title: string;
+	path: string;
+	onClick?: (e: React.MouseEvent) => void;
+}
 
 const Navbar: React.FC = () => {
 	const dispatch = useDispatch();
@@ -11,7 +17,7 @@ const Navbar: React.FC = () => {
 		(state: RootState) => state.auth.isAuthenticated
 	);
 
-	const [navLinks, setNavLinks] = useState([
+	const [navLinks, setNavLinks] = useState<NavLink[]>([
 		{ title: "Login/Register", path: "/login" },
 	]);
 
@@ -19,7 +25,6 @@ const Navbar: React.FC = () => {
 		if (isAuthenticated) {
 			setNavLinks([
 				{ title: "Logout", path: "/login", onClick: handleLogout },
-				{ title: "Create", path: "/bugs/create" },
 			]);
 		} else {
 			setNavLinks([{ title: "Login/Register", path: "/login" }]);

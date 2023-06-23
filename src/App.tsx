@@ -1,13 +1,14 @@
-import './styles/global.css';
-import Navbar from "./components/Navbar";
+import "./styles/global.css";
 import AppRouter from "./config/routes";
 import { BrowserRouter as Router } from "react-router-dom";
+import Layout from "./components/navigation/Layout";
 
 function App() {
 	return (
 		<Router>
-			<Navbar />
-			<AppRouter />
+			<Layout>
+				<AppRouter />
+			</Layout>
 		</Router>
 	);
 }
