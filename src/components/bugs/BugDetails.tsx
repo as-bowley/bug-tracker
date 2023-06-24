@@ -1,6 +1,22 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Container, Typography, Grid, Paper, Button, Box } from "@mui/material";
+import {
+	Container,
+	Typography,
+	Grid,
+	Paper,
+	Button,
+	Box,
+	TextField,
+	FormControl,
+	InputLabel,
+	Select,
+	MenuItem,
+	RadioGroup,
+	FormControlLabel,
+	Radio,
+	SelectChangeEvent,
+} from "@mui/material";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { useNavigate } from "react-router-dom";
@@ -24,8 +40,8 @@ const BugDetails = () => {
 		id: 0,
 		title: "",
 		description: "",
-		product: "",
-		priority: "",
+		product: "web",
+		priority: "low",
 		status: "",
 		createdBy: { id: 0, username: "", displayName: "" },
 		createdAt: "",
@@ -37,6 +53,19 @@ const BugDetails = () => {
 	const handleGoBack = () => {
 		navigate(-1);
 	};
+
+	const [editing, setEditing] = useState(false);
+	const [updatedBug, setUpdatedBug] = useState<Bug>({
+		id: 0,
+		title: "",
+		description: "",
+		product: "",
+		priority: "",
+		status: "",
+		createdBy: { id: 0, username: "", displayName: "" },
+		createdAt: "",
+		updatedAt: "",
+	});
 
 	useEffect(() => {
 		const fetchBugDetails = async () => {
@@ -65,13 +94,45 @@ const BugDetails = () => {
 		fetchBugDetails();
 	}, [id, token]);
 
-	if (!bug) {
-		return (
-			<Container maxWidth="md">
-				<Typography variant="h4">Loading...</Typography>
-			</Container>
-		);
-	}
+	const handleEdit = () => {
+		setEditing(true);
+		setUpdatedBug(bug);
+	};
+
+	const handleChange = (
+		event: React.ChangeEvent<
+			| HTMLInputElement
+			| HTMLTextAreaElement
+			| { name?: string; value: unknown }
+		>
+	) => {
+		const { name, value } = event.target;
+		setUpdatedBug((prevBug) => ({
+			...prevBug,
+			[name as string]: value,
+		}));
+	};
+
+	const handleSave = async () => {
+		try {
+			const response = await fetch(`http://localhost:3000/bugs/${id}`, {
+				method: "PUT",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+				body: JSON.stringify(updatedBug),
+			});
+			if (response.ok) {
+				setEditing(false);
+				setBug(updatedBug);
+			} else {
+				console.error("Error updating bug details");
+			}
+		} catch (error) {
+			console.error("Error updating bug details", error);
+		}
+	};
 
 	return (
 		<Container maxWidth="md">
@@ -87,27 +148,118 @@ const BugDetails = () => {
 				<Grid container spacing={2}>
 					<Grid item xs={12} sm={6}>
 						<Typography variant="subtitle1">Title:</Typography>
-						<Typography variant="body1">{bug.title}</Typography>
+						{editing ? (
+							<TextField
+								name="title"
+								value={updatedBug.title}
+								onChange={handleChange}
+								fullWidth
+							/>
+						) : (
+							<Typography variant="body1">{bug.title}</Typography>
+						)}
 					</Grid>
 					<Grid item xs={12} sm={6}>
 						<Typography variant="subtitle1">
 							Description:
 						</Typography>
-						<Typography variant="body1">
-							{bug.description}
-						</Typography>
+						{editing ? (
+							<TextField
+								name="description"
+								value={updatedBug.description}
+								onChange={handleChange}
+								multiline
+								rows={4}
+								fullWidth
+							/>
+						) : (
+							<Typography variant="body1">
+								{bug.description}
+							</Typography>
+						)}
 					</Grid>
 					<Grid item xs={12} sm={6}>
 						<Typography variant="subtitle1">Priority:</Typography>
-						<Typography variant="body1">{bug.priority}</Typography>
+						{editing ? (
+							<FormControl fullWidth>
+								<Select
+									name="priority"
+									value={updatedBug.priority}
+									onChange={
+										handleChange as (
+											event: SelectChangeEvent<string>
+										) => void
+									}
+								>
+									<MenuItem value="low">Low</MenuItem>
+									<MenuItem value="medium">Medium</MenuItem>
+									<MenuItem value="high">High</MenuItem>
+									<MenuItem value="critical">
+										Critical
+									</MenuItem>
+								</Select>
+							</FormControl>
+						) : (
+							<Typography variant="body1">
+								{bug.priority}
+							</Typography>
+						)}
 					</Grid>
 					<Grid item xs={12} sm={6}>
 						<Typography variant="subtitle1">Status:</Typography>
-						<Typography variant="body1">{bug.status}</Typography>
+						{editing ? (
+							<FormControl component="fieldset">
+								<RadioGroup
+									name="status"
+									value={updatedBug.status}
+									onChange={handleChange}
+								>
+									<FormControlLabel
+										value="Open"
+										control={<Radio />}
+										label="Open"
+									/>
+									<FormControlLabel
+										value="In Progress"
+										control={<Radio />}
+										label="In Progress"
+									/>
+									<FormControlLabel
+										value="Resolved"
+										control={<Radio />}
+										label="Resolved"
+									/>
+								</RadioGroup>
+							</FormControl>
+						) : (
+							<Typography variant="body1">
+								{bug.status}
+							</Typography>
+						)}
 					</Grid>
 					<Grid item xs={12} sm={6}>
 						<Typography variant="subtitle1">Product:</Typography>
-						<Typography variant="body1">{bug.product}</Typography>
+						{editing ? (
+							<FormControl fullWidth>
+								<Select
+									name="product"
+									value={updatedBug.product}
+									onChange={
+										handleChange as (
+											event: SelectChangeEvent<string>
+										) => void
+									}
+								>
+									<MenuItem value="android">Android</MenuItem>
+									<MenuItem value="ios">iOS</MenuItem>
+									<MenuItem value="web">Web</MenuItem>
+								</Select>
+							</FormControl>
+						) : (
+							<Typography variant="body1">
+								{bug.product}
+							</Typography>
+						)}
 					</Grid>
 					<Grid item xs={12} sm={6}>
 						<Typography variant="subtitle1">Created By:</Typography>
@@ -125,6 +277,23 @@ const BugDetails = () => {
 						</Typography>
 						<Typography variant="body1">{bug.updatedAt}</Typography>
 					</Grid>
+					{editing ? (
+						<Grid item xs={12}>
+							<Button
+								variant="contained"
+								color="primary"
+								onClick={handleSave}
+							>
+								Save
+							</Button>
+						</Grid>
+					) : (
+						<Grid item xs={12}>
+							<Button variant="contained" onClick={handleEdit}>
+								Edit
+							</Button>
+						</Grid>
+					)}
 				</Grid>
 			</Paper>
 		</Container>
