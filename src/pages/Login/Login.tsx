@@ -17,7 +17,7 @@ type Notification = {
 	severity: "success" | "error";
 };
 
-export default function Login() {
+const Login: React.FC = () => {
 	const dispatch = useDispatch();
 	const [formData, setFormData] = useState({
 		username: "",
@@ -158,3 +158,5 @@ export default function Login() {
 		</Container>
 	);
 }
+
+export default Login;

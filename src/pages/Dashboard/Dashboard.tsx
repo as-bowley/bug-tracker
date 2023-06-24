@@ -1,9 +1,9 @@
-import "../styles/pages/Dashboard.css";
+import "./Dashboard.css";
 import React, { useEffect, useState } from "react";
-import BugList from "../components/bugs/BugList";
+import BugList from "../../components/bugs/BugList";
 import { useSelector } from "react-redux";
 import { Box, Toolbar } from "@mui/material";
-import { RootState } from "../redux/store";
+import { RootState } from "../../redux/store";
 
 const Dashboard: React.FC = () => {
 	const [bugs, setBugs] = useState([]);

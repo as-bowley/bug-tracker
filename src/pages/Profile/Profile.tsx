@@ -19,7 +19,7 @@ interface User {
 	team: string;
 }
 
-const UserProfile: React.FC = () => {
+const Profile: React.FC = () => {
 	const token = useSelector((state: RootState) => state.auth.token);
 	const userId = useSelector((state: RootState) => state.auth.id);
 
@@ -169,4 +169,4 @@ const UserProfile: React.FC = () => {
 	);
 };
 
-export default UserProfile;
+export default Profile;

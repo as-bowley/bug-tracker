@@ -9,7 +9,6 @@ import {
 	Box,
 	TextField,
 	FormControl,
-	InputLabel,
 	Select,
 	MenuItem,
 	RadioGroup,

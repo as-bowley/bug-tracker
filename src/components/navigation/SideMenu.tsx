@@ -15,7 +15,7 @@ import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import GroupIcon from "@mui/icons-material/Group";
 import LogoutIcon from "@mui/icons-material/Logout";
 import AddIcon from "@mui/icons-material/Add";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { logout, setToken } from "../../redux/actions/authActions";
 import { useDispatch } from "react-redux";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
@@ -25,6 +25,7 @@ const drawerWidth = 240;
 
 const SideMenu: React.FC = () => {
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const [openProduct, setOpenProduct] = useState(false);
 
 	const handleClickProduct = () => {
@@ -34,6 +35,7 @@ const SideMenu: React.FC = () => {
 		e.preventDefault();
 		dispatch(logout());
 		dispatch(setToken(""));
+		navigate("/login");
 	};
 
 	return (
