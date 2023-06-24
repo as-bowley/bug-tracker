@@ -14,6 +14,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import GroupIcon from "@mui/icons-material/Group";
 import LogoutIcon from "@mui/icons-material/Logout";
+import AddIcon from "@mui/icons-material/Add";
 import { Link } from "react-router-dom";
 import { logout } from "../../redux/actions/authActions";
 import { useDispatch } from "react-redux";
@@ -51,6 +52,14 @@ const SideMenu: React.FC = () => {
 			}}
 		>
 			<Box>
+				<List sx={{marginY:4}}>
+					<ListItem button component={Link} to="/bugs/create">
+						<ListItemIcon>
+							<AddIcon />
+						</ListItemIcon>
+						<ListItemText primary="Create" />
+					</ListItem>
+				</List>
 				<List>
 					<ListItem button component={Link} to="/dashboard">
 						<ListItemIcon>
@@ -109,7 +118,7 @@ const SideMenu: React.FC = () => {
 			</Box>
 			<Box>
 				<List>
-					<ListItem button component={Link} to="/profile">
+					<ListItem button component={Link} to="/user/profile">
 						<ListItemIcon>
 							<AccountCircleIcon />
 						</ListItemIcon>

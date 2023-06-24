@@ -31,7 +31,7 @@ const Dashboard: React.FC = () => {
 		};
 
 		fetchBugs();
-	}, []);
+	}, [token]);
 
 	return (
 		<Box component="main" sx={{ flexGrow: 1, p: 3 }}>
