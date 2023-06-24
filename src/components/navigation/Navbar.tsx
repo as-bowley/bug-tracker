@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
-import { logout } from "../../redux/actions/authActions";
+import { logout, setToken } from "../../redux/actions/authActions";
 
 interface NavLink {
 	title: string;
@@ -34,7 +34,7 @@ const Navbar: React.FC = () => {
 	const handleLogout = (e: React.MouseEvent) => {
 		e.preventDefault();
 		dispatch(logout());
-		localStorage.removeItem("token");
+		dispatch(setToken(""))
 	};
 
 	return (

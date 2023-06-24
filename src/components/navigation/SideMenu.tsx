@@ -16,7 +16,7 @@ import GroupIcon from "@mui/icons-material/Group";
 import LogoutIcon from "@mui/icons-material/Logout";
 import AddIcon from "@mui/icons-material/Add";
 import { Link } from "react-router-dom";
-import { logout } from "../../redux/actions/authActions";
+import { logout, setToken } from "../../redux/actions/authActions";
 import { useDispatch } from "react-redux";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import { useState } from "react";
@@ -33,7 +33,7 @@ const SideMenu: React.FC = () => {
 	const handleLogout = (e: React.MouseEvent) => {
 		e.preventDefault();
 		dispatch(logout());
-		localStorage.removeItem("token");
+		dispatch(setToken(""));
 	};
 
 	return (

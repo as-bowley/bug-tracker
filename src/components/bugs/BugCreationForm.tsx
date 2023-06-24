@@ -13,9 +13,12 @@ import {
 	Select,
 	MenuItem,
 	InputLabel,
+	SelectChangeEvent,
+	AlertColor,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { createBug } from "../../redux/actions/bugActions";
+import { RootState } from "../../redux/store";
 
 const BugCreationForm = () => {
 	const [bugData, setBugData] = useState({
@@ -33,19 +36,23 @@ const BugCreationForm = () => {
 
 	const dispatch = useDispatch();
 
-	const id = useSelector((state) => state.auth.id);
+	const id = useSelector((state: RootState) => state.auth.id);
+	const token = useSelector((state: RootState) => state.auth.token);
 
 	const handleCloseNotification = () => {
 		setNotification({ ...notification, open: false });
 	};
 
 	const handleChange = (
-		event: React.ChangeEvent<{ name: string; value: unknown }>
+		event: React.ChangeEvent<
+			HTMLInputElement | { name?: string; value: unknown }
+		>
 	) => {
-		setBugData({
-			...bugData,
-			[event.target.name]: event.target.value as string,
-		});
+		const { name, value } = event.target;
+		setBugData((prevBugData) => ({
+			...prevBugData,
+			[name as string]: value as string,
+		}));
 	};
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -57,9 +64,7 @@ const BugCreationForm = () => {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
-					Authorization: `Bearer ${
-						localStorage.getItem("token") || ""
-					}`,
+					Authorization: `Bearer ${token}`,
 				},
 				body: JSON.stringify(bugDataWithUser),
 			});
@@ -154,7 +159,11 @@ const BugCreationForm = () => {
 						id="product"
 						value={bugData.product}
 						label="Product"
-						onChange={handleChange}
+						onChange={
+							handleChange as (
+								event: SelectChangeEvent<string>
+							) => void
+						}
 					>
 						<MenuItem value="ios">iOS</MenuItem>
 						<MenuItem value="android">Android</MenuItem>
@@ -175,7 +184,7 @@ const BugCreationForm = () => {
 				onClose={handleCloseNotification}
 				anchorOrigin={{ vertical: "top", horizontal: "center" }}
 			>
-				<Alert severity={notification.severity}>
+				<Alert severity={notification.severity as AlertColor || "info"}>
 					{notification.message}
 				</Alert>
 			</Snackbar>

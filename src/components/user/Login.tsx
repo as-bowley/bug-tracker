@@ -1,6 +1,6 @@
 import { useState, ChangeEvent, FormEvent } from "react";
 import { useDispatch } from "react-redux";
-import { loginSuccess } from "../../redux/actions/authActions";
+import { loginSuccess, setToken } from "../../redux/actions/authActions";
 import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -52,7 +52,7 @@ export default function Login() {
 
 			if (response.ok) {
 				const data = await response.json();
-				localStorage.setItem("token", data.token);
+				dispatch(setToken(data.token));
 				dispatch(loginSuccess(data.token));
 				dispatch({ type: "SET_USER_ID", payload: data.id });
 				navigate("/dashboard");
