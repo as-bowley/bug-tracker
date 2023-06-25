@@ -44,6 +44,7 @@ const Login: React.FC = () => {
 			const url = "https://bug-tracker-backend-gold.vercel.app/users/login";
 			const response = await fetch(url, {
 				method: "POST",
+				credentials: "include",
 				headers: {
 					"Content-Type": "application/json",
 				},

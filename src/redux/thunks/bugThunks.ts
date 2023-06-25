@@ -32,6 +32,7 @@ export const createBug = (
 		try {
 			const response = await fetch("https://bug-tracker-backend-gold.vercel.app/bugs/create", {
 				method: "POST",
+				credentials: "include",
 				headers: {
 					"Content-Type": "application/json",
 					Authorization: `Bearer ${token}`,
@@ -63,13 +64,17 @@ export const fetchBugDetails = (
 		dispatch(fetchBugBegin());
 
 		try {
-			const response = await fetch(`https://bug-tracker-backend-gold.vercel.app/bugs/${id}`, {
-				method: "GET",
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: `Bearer ${token}`,
-				},
-			});
+			const response = await fetch(
+				`https://bug-tracker-backend-gold.vercel.app/bugs/${id}`,
+				{
+					method: "GET",
+					credentials: "include",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
 
 			if (response.ok) {
 				const bugData: Bug = await response.json();
@@ -96,14 +101,18 @@ export const updateBug = (
 		dispatch(updateBugBegin());
 
 		try {
-			const response = await fetch(`https://bug-tracker-backend-gold.vercel.app/bugs/${id}`, {
-				method: "PUT",
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: `Bearer ${token}`,
-				},
-				body: JSON.stringify(updatedBug),
-			});
+			const response = await fetch(
+				`https://bug-tracker-backend-gold.vercel.app/bugs/${id}`,
+				{
+					method: "PUT",
+					credentials: "include",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${token}`,
+					},
+					body: JSON.stringify(updatedBug),
+				}
+			);
 
 			if (response.ok) {
 				const bugData: Bug = await response.json();
@@ -146,13 +155,17 @@ export const fetchAllBugs = (
 		dispatch(fetchAllBugsBegin());
 
 		try {
-			const response = await fetch("https://bug-tracker-backend-gold.vercel.app/bugs/all", {
-				method: "GET",
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: `Bearer ${token}`,
-				},
-			});
+			const response = await fetch(
+				"https://bug-tracker-backend-gold.vercel.app/bugs/all",
+				{
+					method: "GET",
+					credentials: "include",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
 
 			if (response.ok) {
 				const bugs: Bug[] = await response.json();
@@ -178,13 +191,17 @@ export const deleteBug = (
 		dispatch(deleteBugBegin());
 
 		try {
-			const response = await fetch(`https://bug-tracker-backend-gold.vercel.app/bugs/${id}`, {
-				method: "DELETE",
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: `Bearer ${token}`,
-				},
-			});
+			const response = await fetch(
+				`https://bug-tracker-backend-gold.vercel.app/bugs/${id}`,
+				{
+					method: "DELETE",
+					credentials: "include",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
 
 			if (response.ok) {
 				dispatch(deleteBugSuccess(id));

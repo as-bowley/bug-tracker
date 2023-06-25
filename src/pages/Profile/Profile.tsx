@@ -37,6 +37,7 @@ const Profile: React.FC = () => {
 					`https://bug-tracker-backend-gold.vercel.app/users/profile/${userId}`,
 					{
 						method: "GET",
+						credentials: "include",
 						headers: {
 							"Content-Type": "application/json",
 							Authorization: `Bearer ${token}`,
@@ -66,6 +67,7 @@ const Profile: React.FC = () => {
 				`https://bug-tracker-backend-gold.vercel.app/users/profile/${userId}`,
 				{
 					method: "PUT",
+					credentials: "include",
 					headers: {
 						"Content-Type": "application/json",
 						Authorization: `Bearer ${token}`,
