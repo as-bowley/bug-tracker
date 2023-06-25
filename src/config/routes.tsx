@@ -20,7 +20,7 @@ const UserProfile = lazy(() => import("../pages/Profile/Profile"));
 
 const AppRouter = () => {
 	const element = useRoutes([
-		{ path: "/", element: <Dashboard /> },
+		{ path: "/", element: <Login /> },
 		{
 			path: "/dashboard",
 			element: (
