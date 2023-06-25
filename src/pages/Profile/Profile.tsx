@@ -34,7 +34,7 @@ const Profile: React.FC = () => {
 		const fetchUserProfile = async () => {
 			try {
 				const response = await fetch(
-					`http://bug-tracker-backend-gold.vercel.app/users/profile/${userId}`,
+					`https://bug-tracker-backend-gold.vercel.app/users/profile/${userId}`,
 					{
 						method: "GET",
 						headers: {
@@ -63,7 +63,7 @@ const Profile: React.FC = () => {
 		const displayname = user.displayname;
 		try {
 			const response = await fetch(
-				`http://bug-tracker-backend-gold.vercel.app/users/profile/${userId}`,
+				`https://bug-tracker-backend-gold.vercel.app/users/profile/${userId}`,
 				{
 					method: "PUT",
 					headers: {

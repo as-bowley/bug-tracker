@@ -52,7 +52,7 @@ export default function Register() {
 		event.preventDefault();
 		try {
 			const url =
-				"http://bug-tracker-backend-gold.vercel.app/users/register";
+				"https://bug-tracker-backend-gold.vercel.app/users/register";
 			const response = await fetch(url, {
 				method: "POST",
 				headers: {

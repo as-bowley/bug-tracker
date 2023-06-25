@@ -41,7 +41,7 @@ const Login: React.FC = () => {
 	const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		try {
-			const url = "http://bug-tracker-backend-gold.vercel.app/users/login";
+			const url = "https://bug-tracker-backend-gold.vercel.app/users/login";
 			const response = await fetch(url, {
 				method: "POST",
 				headers: {
