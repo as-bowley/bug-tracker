@@ -42,9 +42,10 @@ const Login: React.FC = () => {
 		event.preventDefault();
 		try {
 			const url =
-				"https://www.bug-tracker-backend-eta.vercel.app/users/login";
+				"https://www.bug-tracker-backend-as-bowley.vercel.app/users/login";
 			const response = await fetch(url, {
 				method: "POST",
+				mode: "cors",
 				credentials: "include",
 				headers: {
 					"Content-Type": "application/json",
