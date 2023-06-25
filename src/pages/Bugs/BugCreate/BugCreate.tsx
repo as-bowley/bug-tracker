@@ -17,8 +17,8 @@ import {
 	AlertColor,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { createBug } from "../../redux/actions/bugActions";
-import { RootState } from "../../redux/store";
+import { createBug } from "../../../redux/thunks/bugThunks";
+import { RootState } from "../../../redux/types";
 
 const BugCreationForm = () => {
 	const [bugData, setBugData] = useState({
@@ -57,32 +57,38 @@ const BugCreationForm = () => {
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		const bugDataWithUser = { ...bugData, createdBy: id };
-		try {
-			const url = "http://localhost:3000/bugs/create";
-			const response = await fetch(url, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: `Bearer ${token}`,
-				},
-				body: JSON.stringify(bugDataWithUser),
-			});
+		const bugDataWithUser = {
+			createdBy: id,
+			title: bugData.title,
+			description: bugData.description,
+			priority: bugData.priority,
+			product: bugData.product,
+			error: "", 
+		};
 
-			if (response.ok) {
-				dispatch(createBug(bugData));
-				setNotification({
-					open: true,
-					message: "Bug created successfully!",
-					severity: "success",
+		try {
+			dispatch(createBug(bugDataWithUser, token))
+				.then(() => {
+					setNotification({
+						open: true,
+						message: "Bug created successfully!",
+						severity: "success",
+					});
+					setBugData({
+						title: "",
+						description: "",
+						priority: "low",
+						product: "",
+					});
+				})
+				.catch((error: Error) => {
+					console.error(error);
+					setNotification({
+						open: true,
+						message: "Something went wrong!",
+						severity: "error",
+					});
 				});
-				setBugData({
-					title: "",
-					description: "",
-					priority: "low",
-					product: "",
-				});
-			}
 		} catch (error) {
 			console.error(error);
 			setNotification({
@@ -92,6 +98,7 @@ const BugCreationForm = () => {
 			});
 		}
 	};
+
 
 	return (
 		<Container maxWidth="sm">

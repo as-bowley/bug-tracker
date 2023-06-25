@@ -6,12 +6,13 @@ import {
 	ListItemText,
 	Box,
 	Collapse,
+	Divider,
+	ListSubheader,
 } from "@mui/material";
 import BugReportIcon from "@mui/icons-material/BugReport";
 import HomeIcon from "@mui/icons-material/Home";
-import SearchIcon from "@mui/icons-material/Search";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
+import CodeIcon from "@mui/icons-material/Code";
 import LogoutIcon from "@mui/icons-material/Logout";
 import AddIcon from "@mui/icons-material/Add";
 import { Link, useNavigate } from "react-router-dom";
@@ -53,38 +54,48 @@ const SideMenu: React.FC = () => {
 			}}
 		>
 			<Box>
-				<List sx={{marginY:4}}>
-					<ListItem button component={Link} to="/bugs/create">
-						<ListItemIcon>
-							<AddIcon />
-						</ListItemIcon>
-						<ListItemText primary="Create" />
-					</ListItem>
-				</List>
 				<List>
 					<ListItem button component={Link} to="/dashboard">
 						<ListItemIcon>
 							<HomeIcon />
 						</ListItemIcon>
-						<ListItemText primary="Overview" />
+						<ListItemText primary="Dashboard" />
 					</ListItem>
-					<ListItem button component={Link} to="/bugs">
+				</List>
+
+				<Divider />
+
+				<List>
+					<ListSubheader>Bug Tracking</ListSubheader>
+					<ListItem button component={Link} to="/bugs/create">
+						<ListItemIcon>
+							<AddIcon />
+						</ListItemIcon>
+						<ListItemText primary="Create Bug" />
+					</ListItem>
+					<ListItem button component={Link} to="/bugs/all">
 						<ListItemIcon>
 							<BugReportIcon />
 						</ListItemIcon>
-						<ListItemText primary="Bugs" />
+						<ListItemText primary="All Bugs" />
 					</ListItem>
-					<ListItem button component={Link} to="/search">
+					<ListItem button component={Link} to="/bugs/my">
 						<ListItemIcon>
-							<SearchIcon />
+							<BugReportIcon />
 						</ListItemIcon>
-						<ListItemText primary="Search" />
+						<ListItemText primary="My Bugs" />
 					</ListItem>
+				</List>
+
+				<Divider />
+
+				<List>
+					<ListSubheader>Platforms</ListSubheader>
 					<ListItem button onClick={handleClickProduct}>
 						<ListItemIcon>
-							<ShoppingBagIcon />
+							<CodeIcon />
 						</ListItemIcon>
-						<ListItemText primary="Product" />
+						<ListItemText primary="Platforms" />
 						{openProduct ? <ExpandLess /> : <ExpandMore />}
 					</ListItem>
 					<Collapse
@@ -94,25 +105,29 @@ const SideMenu: React.FC = () => {
 						sx={{ paddingLeft: 9 }}
 					>
 						<List component="div" disablePadding>
-							<ListItem button component={Link} to="/product/ios">
-								<ListItemText primary="iOS" />
+							<ListItem button component={Link} to="bugs/platforms/ios">
+								<ListItemText primary="iOS Bugs" />
 							</ListItem>
 							<ListItem
 								button
 								component={Link}
-								to="/product/android"
+								to="bugs/platforms/android"
 							>
-								<ListItemText primary="Android" />
+								<ListItemText primary="Android Bugs" />
 							</ListItem>
-							<ListItem button component={Link} to="/product/web">
-								<ListItemText primary="Web" />
+							<ListItem button component={Link} to="bugs/platforms/web">
+								<ListItemText primary="Web Bugs" />
 							</ListItem>
 						</List>
 					</Collapse>
 				</List>
 			</Box>
+
 			<Box>
+				<Divider />
+
 				<List>
+					<ListSubheader>Account</ListSubheader>
 					<ListItem button component={Link} to="/user/profile">
 						<ListItemIcon>
 							<AccountCircleIcon />

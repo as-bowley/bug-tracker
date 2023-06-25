@@ -18,11 +18,11 @@ import {
 	CircularProgress,
 } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
-import { AppDispatch } from "../../redux/store";
+import { AppDispatch } from "../../../redux/store";
 import { useNavigate } from "react-router-dom";
-import { fetchBugDetails, updateBug } from "../../redux/thunks/bugThunks";
-import { RootState } from "../../redux/types";
-import { Bug } from "../../redux/types/bugTypes";
+import { fetchBugDetails, updateBug } from "../../../redux/thunks/bugThunks";
+import { RootState } from "../../../redux/types";
+import { Bug } from "../../../redux/types/bugTypes";
 
 
 const BugDetails = () => {
@@ -30,18 +30,23 @@ const BugDetails = () => {
 	const { bug, loading, error } = useSelector(
 		(state: RootState) => state.bug
 	);
-	const [updatedBug, setUpdatedBug] = useState<Bug | null>(null);
+	const [updatedBug, setUpdatedBug] = useState<Bug>({});
 	const token = useSelector((state: RootState) => state.auth.token);
 	const { id } = useParams<{ id: string | undefined }>();
 	const navigate = useNavigate();
 
 	const [editing, setEditing] = useState(false);
-
 	useEffect(() => {
 		if (token && id) {
 			dispatch(fetchBugDetails(id, token));
 		}
 	}, [dispatch, id, token]);
+
+	useEffect(() => {
+		if (bug) {
+			setUpdatedBug(bug);
+		}
+	}, [bug])
 
 	const handleGoBack = () => {
 		navigate(-1);
