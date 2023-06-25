@@ -12,7 +12,6 @@ import HomeIcon from "@mui/icons-material/Home";
 import SearchIcon from "@mui/icons-material/Search";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
-import GroupIcon from "@mui/icons-material/Group";
 import LogoutIcon from "@mui/icons-material/Logout";
 import AddIcon from "@mui/icons-material/Add";
 import { Link, useNavigate } from "react-router-dom";
@@ -80,12 +79,6 @@ const SideMenu: React.FC = () => {
 							<SearchIcon />
 						</ListItemIcon>
 						<ListItemText primary="Search" />
-					</ListItem>
-					<ListItem button component={Link} to="/team">
-						<ListItemIcon>
-							<GroupIcon />
-						</ListItemIcon>
-						<ListItemText primary="Team" />
 					</ListItem>
 					<ListItem button onClick={handleClickProduct}>
 						<ListItemIcon>

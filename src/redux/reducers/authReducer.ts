@@ -1,20 +1,15 @@
-import { LOGIN_SUCCESS, LOGOUT, SET_USER_ID } from "../actions/authActions";
-
-type AuthState = {
-	isAuthenticated: boolean;
-	token: string | null;
-	id: string | null; // User id
-};
-
-type AuthAction = {
-	type: string;
-	payload?: string;
-};
+import {
+	AuthState,
+	AuthAction,
+	LOGIN_SUCCESS,
+	LOGOUT,
+	SET_USER_ID,
+} from "../types/authTypes";
 
 const initialState: AuthState = {
 	isAuthenticated: false,
 	token: null,
-	id: null, // User id
+	id: null,
 };
 
 const authReducer = (
@@ -33,7 +28,7 @@ const authReducer = (
 				...state,
 				isAuthenticated: false,
 				token: null,
-				id: null, 
+				id: null,
 			};
 		case SET_USER_ID:
 			return { ...state, id: action.payload };

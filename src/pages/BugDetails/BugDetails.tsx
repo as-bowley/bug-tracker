@@ -15,83 +15,37 @@ import {
 	FormControlLabel,
 	Radio,
 	SelectChangeEvent,
+	CircularProgress,
 } from "@mui/material";
-import { useSelector } from "react-redux";
-import { RootState } from "../../redux/store";
+import { useSelector, useDispatch } from "react-redux";
+import { AppDispatch } from "../../redux/store";
 import { useNavigate } from "react-router-dom";
+import { fetchBugDetails, updateBug } from "../../redux/thunks/bugThunks";
+import { RootState } from "../../redux/types";
+import { Bug } from "../../redux/types/bugTypes";
 
-interface Bug {
-	id: number;
-	title: string;
-	description: string;
-	product: string;
-	priority: string;
-	status: string;
-	createdBy: { id: number; username: string; displayName: string };
-	createdAt: string;
-	updatedAt: string;
-}
 
 const BugDetails = () => {
+	const dispatch: AppDispatch = useDispatch<AppDispatch>();
+	const { bug, loading, error } = useSelector(
+		(state: RootState) => state.bug
+	);
+	const [updatedBug, setUpdatedBug] = useState<Bug | null>(null);
 	const token = useSelector((state: RootState) => state.auth.token);
-	const { id } = useParams();
-	const [bug, setBug] = useState<Bug>({
-		id: 0,
-		title: "",
-		description: "",
-		product: "web",
-		priority: "low",
-		status: "",
-		createdBy: { id: 0, username: "", displayName: "" },
-		createdAt: "",
-		updatedAt: "",
-	});
-
+	const { id } = useParams<{ id: string | undefined }>();
 	const navigate = useNavigate();
+
+	const [editing, setEditing] = useState(false);
+
+	useEffect(() => {
+		if (token && id) {
+			dispatch(fetchBugDetails(id, token));
+		}
+	}, [dispatch, id, token]);
 
 	const handleGoBack = () => {
 		navigate(-1);
 	};
-
-	const [editing, setEditing] = useState(false);
-	const [updatedBug, setUpdatedBug] = useState<Bug>({
-		id: 0,
-		title: "",
-		description: "",
-		product: "",
-		priority: "",
-		status: "",
-		createdBy: { id: 0, username: "", displayName: "" },
-		createdAt: "",
-		updatedAt: "",
-	});
-
-	useEffect(() => {
-		const fetchBugDetails = async () => {
-			try {
-				const response = await fetch(
-					`http://localhost:3000/bugs/${id}`,
-					{
-						method: "GET",
-						headers: {
-							"Content-Type": "application/json",
-							Authorization: `Bearer ${token}`,
-						},
-					}
-				);
-				if (response.ok) {
-					const bugData = await response.json();
-					setBug(bugData);
-				} else {
-					console.error("Error fetching bug details");
-				}
-			} catch (error) {
-				console.error("Error fetching bug details", error);
-			}
-		};
-
-		fetchBugDetails();
-	}, [id, token]);
 
 	const handleEdit = () => {
 		setEditing(true);
@@ -106,32 +60,42 @@ const BugDetails = () => {
 		>
 	) => {
 		const { name, value } = event.target;
-		setUpdatedBug((prevBug) => ({
-			...prevBug,
-			[name as string]: value,
-		}));
+		setUpdatedBug((prevBug) => {
+			if (prevBug) {
+				return {
+					...prevBug,
+					[name as string]: value,
+				};
+			} else {
+				return null;
+			}
+		});
 	};
 
-	const handleSave = async () => {
-		try {
-			const response = await fetch(`http://localhost:3000/bugs/${id}`, {
-				method: "PUT",
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: `Bearer ${token}`,
-				},
-				body: JSON.stringify(updatedBug),
-			});
-			if (response.ok) {
-				setEditing(false);
-				setBug(updatedBug);
-			} else {
-				console.error("Error updating bug details");
-			}
-		} catch (error) {
-			console.error("Error updating bug details", error);
+	const handleSave = () => {
+		if (token && id && updatedBug) {
+			dispatch(updateBug(id, token, updatedBug));
 		}
+		setEditing(false);
 	};
+
+	if (loading) {
+		return (
+			<Container maxWidth="md">
+				<CircularProgress />
+			</Container>
+		);
+	}
+
+	if (error) {
+		return (
+			<Container maxWidth="md">
+				<Typography variant="h4" component="h1" gutterBottom>
+					Error occurred while fetching bug details: {error}
+				</Typography>
+			</Container>
+		);
+	}
 
 	return (
 		<Container maxWidth="md">
@@ -150,12 +114,12 @@ const BugDetails = () => {
 						{editing ? (
 							<TextField
 								name="title"
-								value={updatedBug.title}
+								value={updatedBug?.title || ""}
 								onChange={handleChange}
 								fullWidth
 							/>
 						) : (
-							<Typography variant="body1">{bug.title}</Typography>
+							<Typography variant="body1">{bug?.title || ""}</Typography>
 						)}
 					</Grid>
 					<Grid item xs={12} sm={6}>
@@ -165,7 +129,7 @@ const BugDetails = () => {
 						{editing ? (
 							<TextField
 								name="description"
-								value={updatedBug.description}
+								value={updatedBug?.description || ""}
 								onChange={handleChange}
 								multiline
 								rows={4}
@@ -173,7 +137,7 @@ const BugDetails = () => {
 							/>
 						) : (
 							<Typography variant="body1">
-								{bug.description}
+								{bug?.description || ""}
 							</Typography>
 						)}
 					</Grid>
@@ -183,7 +147,7 @@ const BugDetails = () => {
 							<FormControl fullWidth>
 								<Select
 									name="priority"
-									value={updatedBug.priority}
+									value={updatedBug?.priority || ""}
 									onChange={
 										handleChange as (
 											event: SelectChangeEvent<string>
@@ -200,7 +164,7 @@ const BugDetails = () => {
 							</FormControl>
 						) : (
 							<Typography variant="body1">
-								{bug.priority}
+								{bug?.priority || ""}
 							</Typography>
 						)}
 					</Grid>
@@ -210,7 +174,7 @@ const BugDetails = () => {
 							<FormControl component="fieldset">
 								<RadioGroup
 									name="status"
-									value={updatedBug.status}
+									value={updatedBug?.status || ""}
 									onChange={handleChange}
 								>
 									<FormControlLabel
@@ -232,7 +196,7 @@ const BugDetails = () => {
 							</FormControl>
 						) : (
 							<Typography variant="body1">
-								{bug.status}
+								{bug?.status || ""}
 							</Typography>
 						)}
 					</Grid>
@@ -242,7 +206,7 @@ const BugDetails = () => {
 							<FormControl fullWidth>
 								<Select
 									name="product"
-									value={updatedBug.product}
+									value={updatedBug?.product || ""}
 									onChange={
 										handleChange as (
 											event: SelectChangeEvent<string>
@@ -256,7 +220,7 @@ const BugDetails = () => {
 							</FormControl>
 						) : (
 							<Typography variant="body1">
-								{bug.product}
+								{bug?.product || ""}
 							</Typography>
 						)}
 					</Grid>
@@ -268,13 +232,13 @@ const BugDetails = () => {
 					</Grid>
 					<Grid item xs={12} sm={6}>
 						<Typography variant="subtitle1">Created At:</Typography>
-						<Typography variant="body1">{bug.createdAt}</Typography>
+						<Typography variant="body1">{bug?.createdAt || ""}</Typography>
 					</Grid>
 					<Grid item xs={12}>
 						<Typography variant="subtitle1">
 							Last Updated:
 						</Typography>
-						<Typography variant="body1">{bug.updatedAt}</Typography>
+						<Typography variant="body1">{bug?.updatedAt || ""}</Typography>
 					</Grid>
 					{editing ? (
 						<Grid item xs={12}>

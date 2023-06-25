@@ -1,31 +1,34 @@
-export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
-export const LOGOUT = "LOGOUT";
-export const SET_USER_ID = "SET_USER_ID";
-export const SET_TOKEN = "SET_TOKEN";
+import {
+	LOGIN_SUCCESS,
+	LOGOUT,
+	SET_USER_ID,
+	SET_TOKEN,
+	AuthAction,
+} from "../types/authTypes";
 
-export const loginSuccess = (token : string) => {
+export const loginSuccess = (token: string): AuthAction => {
 	return {
 		type: LOGIN_SUCCESS,
 		payload: token,
 	};
 };
 
-export const logout = () => {
+export const logout = (): AuthAction => {
 	return {
 		type: LOGOUT,
 	};
 };
 
-export const setUserId = (id : string) => {
+export const setUserId = (id: string): AuthAction => {
 	return {
 		type: SET_USER_ID,
 		payload: id,
 	};
-}
+};
 
-export const setToken = (token : string) => {
+export const setToken = (token: string): AuthAction => {
 	return {
 		type: SET_TOKEN,
 		payload: token,
 	};
-}
+};

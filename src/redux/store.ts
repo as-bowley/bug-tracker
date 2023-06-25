@@ -1,10 +1,27 @@
-import { combineReducers, createStore } from "redux";
-import authReducer from "./reducers/userReducers";
+import {
+	Action,
+	applyMiddleware,
+	createStore,
+	combineReducers,
+} from "redux";
+import thunk, { ThunkAction, ThunkDispatch } from "redux-thunk";
+import authReducer from "./reducers/authReducer";
+import bugReducer from "./reducers/bugReducer";
+import { RootState } from "./types";
 
-export type RootState = ReturnType<typeof rootReducer>;
+export type AppDispatch = ThunkDispatch<RootState, unknown, Action<string>>;
+export type AppThunk<ReturnType = void> = ThunkAction<
+	ReturnType,
+	RootState,
+	unknown,
+	Action<string>
+>;
 
 const rootReducer = combineReducers({
 	auth: authReducer,
+	bug: bugReducer,
 });
 
-export const store = createStore(rootReducer);
+const store = createStore(rootReducer, applyMiddleware(thunk));
+
+export default store;
