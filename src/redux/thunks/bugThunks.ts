@@ -30,7 +30,7 @@ export const createBug = (
 		dispatch(createBugBegin());
 
 		try {
-			const response = await fetch("http://localhost:3000/bugs/create", {
+			const response = await fetch("http://bug-tracker-backend-gold.vercel.app/bugs/create", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -63,7 +63,7 @@ export const fetchBugDetails = (
 		dispatch(fetchBugBegin());
 
 		try {
-			const response = await fetch(`http://localhost:3000/bugs/${id}`, {
+			const response = await fetch(`http://bug-tracker-backend-gold.vercel.app/bugs/${id}`, {
 				method: "GET",
 				headers: {
 					"Content-Type": "application/json",
@@ -96,7 +96,7 @@ export const updateBug = (
 		dispatch(updateBugBegin());
 
 		try {
-			const response = await fetch(`http://localhost:3000/bugs/${id}`, {
+			const response = await fetch(`http://bug-tracker-backend-gold.vercel.app/bugs/${id}`, {
 				method: "PUT",
 				headers: {
 					"Content-Type": "application/json",
@@ -110,7 +110,7 @@ export const updateBug = (
 				dispatch(updateBugSuccess(bugData));
 
 				const updatedResponse = await fetch(
-					`http://localhost:3000/bugs/${id}`,
+					`http://bug-tracker-backend-gold.vercel.app/bugs/${id}`,
 					{
 						method: "GET",
 						headers: {
@@ -146,7 +146,7 @@ export const fetchAllBugs = (
 		dispatch(fetchAllBugsBegin());
 
 		try {
-			const response = await fetch("http://localhost:3000/bugs/all", {
+			const response = await fetch("http://bug-tracker-backend-gold.vercel.app/bugs/all", {
 				method: "GET",
 				headers: {
 					"Content-Type": "application/json",
@@ -178,7 +178,7 @@ export const deleteBug = (
 		dispatch(deleteBugBegin());
 
 		try {
-			const response = await fetch(`http://localhost:3000/bugs/${id}`, {
+			const response = await fetch(`http://bug-tracker-backend-gold.vercel.app/bugs/${id}`, {
 				method: "DELETE",
 				headers: {
 					"Content-Type": "application/json",

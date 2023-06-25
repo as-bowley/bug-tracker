@@ -51,7 +51,8 @@ export default function Register() {
 	const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		try {
-			const url = "http://localhost:3000/users/register";
+			const url =
+				"http://bug-tracker-backend-gold.vercel.app/users/register";
 			const response = await fetch(url, {
 				method: "POST",
 				headers: {
