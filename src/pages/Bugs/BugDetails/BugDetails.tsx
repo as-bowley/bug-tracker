@@ -20,7 +20,7 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch } from "../../../redux/store";
 import { useNavigate } from "react-router-dom";
-import { fetchBugDetails, updateBug } from "../../../redux/thunks/bugThunks";
+import { deleteBug, fetchBugDetails, updateBug } from "../../../redux/thunks/bugThunks";
 import { RootState } from "../../../redux/types";
 import { Bug } from "../../../redux/types/bugTypes";
 
@@ -84,6 +84,13 @@ const BugDetails = () => {
 		setEditing(false);
 	};
 
+	const handleDelete = () => {
+		if (token && id) {
+			dispatch(deleteBug(id, token));
+			navigate(-1);
+		}
+	};
+
 	if (loading) {
 		return (
 			<Container maxWidth="md">
@@ -124,7 +131,9 @@ const BugDetails = () => {
 								fullWidth
 							/>
 						) : (
-							<Typography variant="body1">{bug?.title || ""}</Typography>
+							<Typography variant="body1">
+								{bug?.title || ""}
+							</Typography>
 						)}
 					</Grid>
 					<Grid item xs={12} sm={6}>
@@ -237,31 +246,43 @@ const BugDetails = () => {
 					</Grid>
 					<Grid item xs={12} sm={6}>
 						<Typography variant="subtitle1">Created At:</Typography>
-						<Typography variant="body1">{bug?.createdAt || ""}</Typography>
+						<Typography variant="body1">
+							{bug?.createdAt || ""}
+						</Typography>
 					</Grid>
 					<Grid item xs={12}>
 						<Typography variant="subtitle1">
 							Last Updated:
 						</Typography>
-						<Typography variant="body1">{bug?.updatedAt || ""}</Typography>
+						<Typography variant="body1">
+							{bug?.updatedAt || ""}
+						</Typography>
 					</Grid>
-					{editing ? (
-						<Grid item xs={12}>
-							<Button
-								variant="contained"
-								color="primary"
-								onClick={handleSave}
-							>
-								Save
-							</Button>
-						</Grid>
-					) : (
-						<Grid item xs={12}>
+					<Grid item xs={12}>
+						{editing ? (
+							<>
+								<Button
+									variant="contained"
+									color="primary"
+									onClick={handleSave}
+								>
+									Save
+								</Button>
+								<Button
+									variant="contained"
+									color="secondary"
+									onClick={handleDelete}
+									style={{ marginLeft: "1rem" }}
+								>
+									Delete
+								</Button>
+							</>
+						) : (
 							<Button variant="contained" onClick={handleEdit}>
 								Edit
 							</Button>
-						</Grid>
-					)}
+						)}
+					</Grid>
 				</Grid>
 			</Paper>
 		</Container>

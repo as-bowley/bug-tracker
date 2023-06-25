@@ -12,6 +12,9 @@ import {
 	FETCH_ALL_BUGS_BEGIN,
 	FETCH_ALL_BUGS_SUCCESS,
 	FETCH_ALL_BUGS_ERROR,
+	DELETE_BUG_BEGIN,
+	DELETE_BUG_SUCCESS,
+	DELETE_BUG_ERROR,
 } from "../types/bugTypes";
 import { Bug } from "../types/bugTypes";
 
@@ -36,6 +39,7 @@ const bugReducer = (
 		case FETCH_BUG_BEGIN:
 		case UPDATE_BUG_BEGIN:
 		case FETCH_ALL_BUGS_BEGIN:
+		case DELETE_BUG_BEGIN:
 			return {
 				...state,
 				loading: true,
@@ -54,6 +58,7 @@ const bugReducer = (
 		case FETCH_BUG_ERROR:
 		case UPDATE_BUG_ERROR:
 		case FETCH_ALL_BUGS_ERROR:
+		case DELETE_BUG_ERROR:
 			return {
 				...state,
 				loading: false,
@@ -86,6 +91,14 @@ const bugReducer = (
 				loading: false,
 				error: null,
 				bugs: action.payload,
+			};
+
+		case DELETE_BUG_SUCCESS:
+			return {
+				...state,
+				loading: false,
+				error: null,
+				bugs: state.bugs.filter((bug) => bug.id !== action.payload),
 			};
 
 		default:

@@ -15,6 +15,9 @@ import {
 	fetchAllBugsBegin,
 	fetchAllBugsError,
 	fetchAllBugsSuccess,
+	deleteBugSuccess,
+	deleteBugBegin,
+	deleteBugError,
 } from "../actions/bugActions";
 import { AnyAction } from "redux";
 import { AppThunk } from "../store";
@@ -106,7 +109,6 @@ export const updateBug = (
 				const bugData: Bug = await response.json();
 				dispatch(updateBugSuccess(bugData));
 
-				// Fetch the updated bug details from the server after updating
 				const updatedResponse = await fetch(
 					`http://localhost:3000/bugs/${id}`,
 					{
@@ -137,7 +139,6 @@ export const updateBug = (
 	};
 };
 
-
 export const fetchAllBugs = (
 	token: string
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
@@ -164,6 +165,37 @@ export const fetchAllBugs = (
 				dispatch(fetchAllBugsError(error.message));
 			} else {
 				dispatch(fetchAllBugsError("An unknown error occurred"));
+			}
+		}
+	};
+};
+
+export const deleteBug = (
+	id: string | undefined,
+	token: string
+): ThunkAction<void, RootState, unknown, AnyAction> => {
+	return async (dispatch) => {
+		dispatch(deleteBugBegin());
+
+		try {
+			const response = await fetch(`http://localhost:3000/bugs/${id}`, {
+				method: "DELETE",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+			});
+
+			if (response.ok) {
+				dispatch(deleteBugSuccess(id));
+			} else {
+				throw new Error("Error deleting bug");
+			}
+		} catch (error) {
+			if (error instanceof Error) {
+				dispatch(deleteBugError(error.message));
+			} else {
+				dispatch(deleteBugError("An unknown error occurred"));
 			}
 		}
 	};

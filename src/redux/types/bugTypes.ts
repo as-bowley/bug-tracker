@@ -14,6 +14,10 @@ export const FETCH_ALL_BUGS_BEGIN = "FETCH_ALL_BUGS_BEGIN";
 export const FETCH_ALL_BUGS_SUCCESS = "FETCH_ALL_BUGS_SUCCESS";
 export const FETCH_ALL_BUGS_ERROR = "FETCH_ALL_BUGS_ERROR";
 
+export const DELETE_BUG_BEGIN = "DELETE_BUG_BEGIN";
+export const DELETE_BUG_SUCCESS = "DELETE_BUG_SUCCESS";
+export const DELETE_BUG_ERROR = "DELETE_BUG_ERROR";
+
 export interface Bug {
 	_id: string;
 	title: string;
@@ -90,6 +94,20 @@ interface FetchAllBugsErrorAction {
 	payload: string;
 }
 
+interface DeleteBugBeginAction {
+	type: typeof DELETE_BUG_BEGIN;
+}
+
+interface DeleteBugSuccessAction {
+	type: typeof DELETE_BUG_SUCCESS;
+	payload: Bug[];
+}
+
+interface DeleteBugErrorAction {
+	type: typeof DELETE_BUG_ERROR;
+	payload: string;
+}
+
 export type BugActionTypes =
 	| CreateBugBeginAction
 	| CreateBugSuccessAction
@@ -102,4 +120,7 @@ export type BugActionTypes =
 	| UpdateBugErrorAction
 	| FetchAllBugsBeginAction
 	| FetchAllBugsSuccessAction
-	| FetchAllBugsErrorAction;
+	| FetchAllBugsErrorAction
+	| DeleteBugBeginAction
+	| DeleteBugSuccessAction
+	| DeleteBugErrorAction;

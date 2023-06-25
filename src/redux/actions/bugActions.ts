@@ -11,6 +11,10 @@ import {
 	CREATE_BUG_SUCCESS,
 	CREATE_BUG_ERROR,
 	CREATE_BUG_BEGIN,
+	DELETE_BUG_BEGIN,
+	DELETE_BUG_ERROR,
+	DELETE_BUG_SUCCESS,
+	FETCH_ALL_BUGS_BEGIN,
 } from "../types/bugTypes";
 
 export interface BugData {
@@ -58,7 +62,7 @@ export const updateBugError = (error: string) => ({
 });
 
 export const fetchAllBugsBegin = () => ({
-	type: FETCH_BUG_BEGIN,
+	type: FETCH_ALL_BUGS_BEGIN,
 });
 
 export const fetchAllBugsSuccess = (bugs: Bug[]): BugActionTypes => ({
@@ -69,6 +73,20 @@ export const fetchAllBugsSuccess = (bugs: Bug[]): BugActionTypes => ({
 
 export const fetchAllBugsError = (error: string) => ({
 	type: FETCH_BUG_ERROR,
+	payload: error,
+});
+
+export const deleteBugBegin = () => ({
+	type: DELETE_BUG_BEGIN,
+});
+
+export const deleteBugSuccess = (bugId: string) => ({
+	type: DELETE_BUG_SUCCESS,
+	payload: bugId,
+});
+
+export const deleteBugError = (error: string) => ({
+	type: DELETE_BUG_ERROR,
 	payload: error,
 });
 

@@ -79,12 +79,12 @@ const SideMenu: React.FC = () => {
 						</ListItemIcon>
 						<ListItemText primary="All Bugs" />
 					</ListItem>
-					<ListItem button component={Link} to="/bugs/my">
+					{/* <ListItem button component={Link} to="/bugs/my">
 						<ListItemIcon>
 							<BugReportIcon />
 						</ListItemIcon>
 						<ListItemText primary="My Bugs" />
-					</ListItem>
+					</ListItem> */}
 				</List>
 
 				<Divider />
